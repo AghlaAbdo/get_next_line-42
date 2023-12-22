@@ -6,27 +6,19 @@
 /*   By: aaghla <aaghla@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 17:59:22 by aaghla            #+#    #+#             */
-/*   Updated: 2023/12/19 18:13:39 by aaghla           ###   ########.fr       */
+/*   Updated: 2023/12/22 21:51:00 by aaghla           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
-void	*free_it(char *s)
-{
-	free(s);
-	return (NULL);
-}
-
-char	*read_line(int fd, char *reached)
+static char	*ft_read_line(int fd, char *reached)
 {
 	char	*buff;
 	int		rd;
 
-	rd = 2;
-	if (BUFFER_SIZE == 2147483647)
-		rd = 1;
-	buff = malloc((BUFFER_SIZE -1 + rd) * sizeof(char));
+	rd = 1;
+	buff = malloc(((size_t)BUFFER_SIZE +1) * sizeof(char));
 	if (!buff)
 		return (NULL);
 	while (!ft_strchr(reached, '\n') && rd > 0)
@@ -36,7 +28,7 @@ char	*read_line(int fd, char *reached)
 		{
 			if (reached)
 				free(reached);
-			return (free_it(buff));
+			return (ft_free_it(buff));
 		}
 		if (rd == 0)
 			break ;
@@ -47,7 +39,7 @@ char	*read_line(int fd, char *reached)
 	return (reached);
 }
 
-char	*one_line(char *reached)
+static char	*ft_one_line(char *reached)
 {
 	char	*line;
 	int		i;
@@ -56,14 +48,13 @@ char	*one_line(char *reached)
 
 	i = 0;
 	j = -1;
+	n = 1;
 	if (!reached)
 		return (NULL);
 	while (reached[i] && reached[i] != '\n')
 		i++;
 	if (reached[i] == '\n')
 		n = 2;
-	else
-		n = 1;
 	line = malloc((i + n) * sizeof(char));
 	if (!line)
 		return (NULL);
@@ -75,7 +66,7 @@ char	*one_line(char *reached)
 	return (line);
 }
 
-char	*next_line(char *reached)
+static char	*ft_next_line(char *reached)
 {
 	char	*new;
 	int		i;
@@ -85,33 +76,33 @@ char	*next_line(char *reached)
 	j = 0;
 	if (!reached)
 		return (NULL);
-	else if (!reached[0] || !ft_strchr(reached, '\n'))
-		return (free_it(reached));
+	else if (!ft_strchr(reached, '\n'))
+		return (ft_free_it(reached));
 	i = ft_strlen(reached, '\n');
 	j = ft_strlen(reached, '\0');
-	new = malloc((j + 1) * sizeof(char));
+	new = malloc((j - i) * sizeof(char));
 	if (!new)
-		return (free_it(reached));
+		return (ft_free_it(reached));
 	j = 0;
-	i = ft_strlen(reached, '\n') + 1;
+	i++;
 	while (reached[i])
 		new[j++] = reached[i++];
 	new[j] = '\0';
 	free(reached);
 	if (!new[0])
-		return (free_it(new));
+		return (ft_free_it(new));
 	return (new);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*reached[10240];
+	static char	*reached[OPEN_MAX];
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd >= OPEN_MAX)
 		return (NULL);
-	reached[fd] = read_line(fd, reached[fd]);
-	line = one_line(reached[fd]);
-	reached[fd] = next_line(reached[fd]);
+	reached[fd] = ft_read_line(fd, reached[fd]);
+	line = ft_one_line(reached[fd]);
+	reached[fd] = ft_next_line(reached[fd]);
 	return (line);
 }

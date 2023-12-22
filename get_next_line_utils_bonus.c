@@ -6,11 +6,17 @@
 /*   By: aaghla <aaghla@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/15 18:00:38 by aaghla            #+#    #+#             */
-/*   Updated: 2023/12/19 12:24:25 by aaghla           ###   ########.fr       */
+/*   Updated: 2023/12/22 16:15:20 by aaghla           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
+
+void	*ft_free_it(char *s)
+{
+	free(s);
+	return (NULL);
+}
 
 int	ft_strlen(char *s, int c)
 {
@@ -66,20 +72,3 @@ char	*ft_strjoin(char *s1, char *s2, int rd)
 		free(s1);
 	return (str);
 }
-
-// #include <libc.h>
-// int main()
-// {
-// // 	int fd = open("fd1.txt", O_RDONLY);
-// // 	char *s = NULL;
-// // 	char p[BUFFER_SIZE + 1];
-// // 	p[BUFFER_SIZE] = '\0';
-// // 	int rd = read(fd, p, BUFFER_SIZE);
-// // 	char *r = ft_strjoin(s, p);
-// 	// printf("%s", r);
-
-// 	// char *s1 = malloc(sizeof(char) * 1);
-// 	// s1[0] = '\0';
-// 	// char *s2="hello";
-// 	// printf("%d", ft_strlen(s2));
-// }
